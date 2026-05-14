@@ -1,32 +1,63 @@
 using System;
 using System.Diagnostics;
-
 namespace ProgrammingGame
 {
     using System.Diagnostics;
-
     public class User
     {
         public string UserName { get; set; }
-        public int Age {get; set; }
-
+        public int Age { get; set; }
         public int CurrentStreak { get; private set; } = 0;
         public int BestStreak { get; private set; } = 0;
         public TimeSpan TimeSpent { get; private set; } = TimeSpan.Zero;
-
         public List<Achievement> Achievements { get; private set; } = new List<Achievement>();
         public List<Reward> Awards { get; private set; } = new List<Reward>();
-
         public RankSystem Rank { get; private set; }
-
         private Stopwatch stopwatch = new Stopwatch();
+
+
+        public User()
+        {
+            UserName = "Гравець";
+            Age = 18;
+
+            stopwatch = new Stopwatch();
+            Achievements = new List<Achievement>();
+            Awards = new List<Reward>();
+            Rank = new RankSystem();
+
+            TimeSpent = TimeSpan.Zero;
+        }
 
         public User(string userName, int age)
         {
             UserName = userName;
-            Age = age; 
+            Age = age;
             Rank = new RankSystem();
         }
+
+        public User(User other)
+        {
+            if (other == null)
+                throw new ArgumentNullException(nameof(other));
+
+            UserName = other.UserName;
+            Age = other.Age;
+            CurrentStreak = other.CurrentStreak;
+            BestStreak = other.BestStreak;
+            TimeSpent = other.TimeSpent;
+
+            Achievements = other.Achievements.Select(a => new Achievement(a)).ToList();
+            Awards = other.Awards.Select(a => new Reward(a)).ToList();
+
+            Rank = new RankSystem(other.Rank);
+            stopwatch = new Stopwatch();
+        }
+
+
+
+
+
 
         public void StartSession() => stopwatch.Restart();
         public void EndSession()
@@ -34,21 +65,17 @@ namespace ProgrammingGame
             stopwatch.Stop();
             TimeSpent += stopwatch.Elapsed;
         }
-
         public void AddPoints(int points)
         {
-            Rank.AddPoints(points);         
+            Rank.AddPoints(points);
         }
-
         public void IncreaseStreak()
         {
             CurrentStreak++;
             if (CurrentStreak > BestStreak)
                 BestStreak = CurrentStreak;
         }
-
         public void ResetStreak() => CurrentStreak = 0;
-
         public void UnlockAchievement(Achievement achievement)
         {
             if (!Achievements.Any(a => a.Name == achievement.Name))
@@ -59,7 +86,6 @@ namespace ProgrammingGame
                 Console.ResetColor();
             }
         }
-
         public void UnlockAward(Reward award)
         {
             if (!Awards.Any(a => a.Name == award.Name))
@@ -70,7 +96,6 @@ namespace ProgrammingGame
                 Console.ResetColor();
             }
         }
-
         public override string ToString()
         {
             return $"{UserName}, Вік {Age} | Ранг: {Rank.CurrentRank}";

@@ -130,7 +130,4 @@ namespace ProgrammingGame
             Console.WriteLine($"Платформа: EduQuest OOP Simulator\n");
         }
     }
-
-
-
 }
