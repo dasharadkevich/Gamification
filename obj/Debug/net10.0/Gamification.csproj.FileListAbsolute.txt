@@ -1,0 +1,14 @@
+/Users/dasharadkevych/Gamification/bin/Debug/net10.0/Gamification
+/Users/dasharadkevych/Gamification/bin/Debug/net10.0/Gamification.deps.json
+/Users/dasharadkevych/Gamification/bin/Debug/net10.0/Gamification.runtimeconfig.json
+/Users/dasharadkevych/Gamification/bin/Debug/net10.0/Gamification.dll
+/Users/dasharadkevych/Gamification/bin/Debug/net10.0/Gamification.pdb
+/Users/dasharadkevych/Gamification/obj/Debug/net10.0/Gamification.GeneratedMSBuildEditorConfig.editorconfig
+/Users/dasharadkevych/Gamification/obj/Debug/net10.0/Gamification.AssemblyInfoInputs.cache
+/Users/dasharadkevych/Gamification/obj/Debug/net10.0/Gamification.AssemblyInfo.cs
+/Users/dasharadkevych/Gamification/obj/Debug/net10.0/Gamification.csproj.CoreCompileInputs.cache
+/Users/dasharadkevych/Gamification/obj/Debug/net10.0/Gamification.dll
+/Users/dasharadkevych/Gamification/obj/Debug/net10.0/refint/Gamification.dll
+/Users/dasharadkevych/Gamification/obj/Debug/net10.0/Gamification.pdb
+/Users/dasharadkevych/Gamification/obj/Debug/net10.0/Gamification.genruntimeconfig.cache
+/Users/dasharadkevych/Gamification/obj/Debug/net10.0/ref/Gamification.dll
