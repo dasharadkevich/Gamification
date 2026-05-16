@@ -8,10 +8,25 @@ namespace ProgrammingGame
         public User User { get; private set; }
         public Quiz Quiz { get; private set; }
 
+
+
+    public bool HasUser() => User != null;
+    public bool HasQuiz() => Quiz != null && Quiz.HasQuestions();
+    public bool IsQuizCompleted(int correctAnswers) => correctAnswers >= Quiz.Questions.Count * 0.7;
+    public bool UserDeservesMasterTitle() => User.BestStreak >= 8 && User.TimeSpent.TotalMinutes <= 12;
+
         public Simulation(User user, Quiz quiz)
         {
-            User = user;
-            Quiz = quiz;
+            User = user ?? new User();
+            Quiz = quiz ?? new Quiz();
+        }
+
+        // Конструктор копій
+        public Simulation(Simulation other)
+        {
+            if (other == null) throw new ArgumentNullException(nameof(other));
+            User = new User(other.User);     
+            Quiz = new Quiz(other.Quiz);      
         }
 
         public void Run()

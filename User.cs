@@ -16,6 +16,18 @@ namespace ProgrammingGame
         private Stopwatch stopwatch = new Stopwatch();
 
 
+
+        public bool HasActiveStreak() => CurrentStreak > 0;
+        public bool HasBestStreak(int threshold) => BestStreak >= threshold;
+        public bool IsBeginner() => Rank.CurrentRank == "Новачок";
+        public bool HasMaxRank() => Rank.CurrentRank == "Архітектор";
+        public bool HasAchievement(string achievementName) => 
+            Achievements.Any(a => a.Name.Equals(achievementName, StringComparison.OrdinalIgnoreCase));
+        public bool HasAnyAchievements() => Achievements.Count > 0;
+        public bool HasAnyAwards() => Awards.Count > 0;
+        public bool IsSessionActive() => stopwatch.IsRunning;
+
+
         public User()
         {
             UserName = "Гравець";

@@ -1,19 +1,163 @@
-﻿using System.Runtime.CompilerServices;
-using ProgrammingGame;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json;
 
-class Program
+namespace ProgrammingGame
 {
-    static void Main(string[] args)
+    class Program
     {
-        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        static void Main(string[] args)
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-        var questionData = new List<(string Text, string[] Options, int CorrectIndex, string Explanation)>
+
+            AuthorIntroduction();
+
+            var user = UserLogin();
+
+            bool continuePlaying = true;
+
+            while (continuePlaying)
+            {
+                Quiz quiz = LoadQuizFromJson("tests.json", targetTestId: GetNextTestId());
+
+                if (quiz == null || quiz.IsEmpty())
+                {
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("Не вдалося завантажити тест з JSON. Використовуємо вбудовані питання.\n");
+                    Console.ResetColor();
+
+                    quiz = CreateDefaultQuiz();
+                }
+
+                var simulation = new Simulation(user, quiz);
+                simulation.Run();
+
+                continuePlaying = AskToContinue();
+            }
+
+            Console.WriteLine("\nДякуємо за гру! До зустрічі 👋");
+            Console.ReadKey();
+        }
+
+        private static int currentTestId = 1;
+
+        static int GetNextTestId()
+        {
+            return currentTestId++;
+        }
+
+        static bool AskToContinue()
+        {
+            Console.WriteLine("\n" + new string('═', 50));
+            Console.WriteLine("Бажаєте пройти ще один тест?");
+            Console.Write("Напишіть 'no' або 'ні', щоб вийти. Для продовження — просто натисніть Enter: ");
+
+            string input = Console.ReadLine()?.Trim().ToLower() ?? "";
+
+            return input != "no" && input != "ні" && input != "n";
+        }
+
+
+        static void AuthorIntroduction()
+        {
+            Console.WriteLine("ПІБ студента: Радкевич Даша Ігорівна");
+            Console.WriteLine("Курс: 1   Група: ІПЗ-11");
+            Console.WriteLine("Варіант завдання: Серйозна гра для вивчення ООП");
+            Console.WriteLine("Версія 1\n");
+        }
+
+        static User UserLogin()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Для початку зареєструйтесь будь ласка ...");
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Введіть ім'я: ");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            string name = Console.ReadLine() ?? "";
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Введіть вік: ");
+
+            Console.ForegroundColor = ConsoleColor.White;
+            int age = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
+
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"\nВітаємо, {name}! Реєстрація успішна.");
+
+            Console.ResetColor();
+
+            var user = new User(name, age);
+
+            return user;
+        }
+
+        static Quiz LoadQuizFromJson(string filePath, int targetTestId)
+        {
+            try
+            {
+                string fullPath = Path.GetFullPath(filePath);
+
+                if (!File.Exists(fullPath))
+                {
+                    Console.WriteLine($"Файл не знайдено: {fullPath}");
+                    return null;
+                }
+
+                string jsonString = File.ReadAllText(fullPath);
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                var root = JsonSerializer.Deserialize<QuizFileRoot>(jsonString, options);
+
+                if (root?.Tests == null || root.Tests.Count == 0)
+                {
+                    Console.WriteLine("У JSON-файлі немає тестів.");
+                    return null;
+                }
+
+                var selectedTest = root.Tests.FirstOrDefault(t => t.TestId == targetTestId);
+
+                if (selectedTest == null)
+                {
+                    Console.WriteLine($"Тест з ID {targetTestId} не знайдено.");
+                    return null;
+                }
+
+
+                // Конвертуємо питання у формат для Quiz
+                var questionList = selectedTest.Questions
+                    .Select(q => (q.Text, q.Options.ToArray(), q.CorrectIndex, q.Explanation))
+                    .ToList();
+
+                return new Quiz(questionList);
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"Помилка читання JSON: {ex.Message}");
+                Console.ResetColor();
+                return null;
+            }
+        }
+
+
+        static Quiz CreateDefaultQuiz()
+        {
+            var defaultQuestions = new List<(string Text, string[] Options, int CorrectIndex, string Explanation)>
     {
         (
-            "Що таке інкапсуляція?",
-            new string[]
+            "Що таке інкапсуляція в ООП?",
+            new[]
             {
-                "Приховування деталей реалізації",
+                "Приховування деталей реалізації та захист даних",
                 "Можливість об'єкта набувати різних форм",
                 "Створення ієрархії класів",
                 "Виділення тільки суттєвих характеристик"
@@ -23,135 +167,69 @@ class Program
         ),
         (
             "Що таке поліморфізм?",
-            new string[]
+            new[]
             {
-                "Приховування даних",
+                "Приховування даних від зовнішнього доступу",
                 "Можливість одного об'єкта мати кілька форм",
-                "Передача відповідальності",
+                "Успадкування властивостей від батьківського класу",
                 "Створення нового класу на основі існуючого"
             },
             1,
-            "Поліморфізм дозволяє використовувати об'єкти різних класів через один інтерфейс."
+            "Поліморфізм дозволяє об'єктам різних класів використовувати один інтерфейс."
         ),
         (
-            "Який принцип ООП дозволяє створювати ієрархію класів?",
-            new string[] { "Інкапсуляція", "Абстракція", "Спадкування", "Поліморфізм" },
+            "Який принцип ООП відповідає за створення ієрархії класів?",
+            new[]
+            {
+                "Інкапсуляція",
+                "Абстракція",
+                "Спадкування",
+                "Поліморфізм"
+            },
             2,
             "Спадкування (Inheritance) дозволяє дочірньому класу успадковувати властивості та методи батьківського."
         ),
-
         (
             "Що таке абстракція в ООП?",
-            new string[]
+            new[]
             {
-                "Приховування деталей реалізаці ї",
+                "Приховування деталей реалізації",
                 "Виділення тільки суттєвих характеристик об'єкта",
                 "Можливість методу мати кілька реалізацій",
-                "Створення нових класів на основі старих"
+                "Створення копії об'єкта"
             },
             1,
             "Абстракція — це приховування складності та показ лише необхідної інформації."
         ),
         (
-            "Що означає ключове слово 'private' у класі?",
-            new string[]
+            "Який модифікатор доступу використовується за замовчуванням для членів класу в C#?",
+            new[]
             {
-                "Поле доступне тільки всередині класу",
-                "Поле доступне усім класам",
-                "Поле доступне тільки в поточній збірці",
-                "Поле доступне в похідних класах"
+                "public",
+                "private",
+                "protected",
+                "internal"
             },
-            0,
-            "Модифікатор private забезпечує інкапсуляцію, приховуючи дані від зовнішнього доступу."
+            1,
+            "У C# члени класу (поля, методи) за замовчуванням мають доступ private."
+        ),
+        (
+            "Для чого використовується ключове слово 'virtual'?",
+            new[]
+            {
+                "Для створення абстрактного методу",
+                "Для дозволу перевизначення методу в похідному класі",
+                "Для статичного зв'язування",
+                "Для приховування методу"
+            },
+            1,
+            "virtual дозволяє перевизначати метод у дочірніх класах за допомогою override."
         )
     };
 
-
-        AuthorIntroduction();
-
-        var user = UserLogin();
-        var quiz = new Quiz(questionData);
-
-        var simulation = new Simulation(user, quiz);
-        simulation.Run();
-
-        Console.WriteLine("\nНатисніть будь-яку клавішу для завершення...");
-        Console.ReadKey();
-
-    }
-
-
-
-    static void AuthorIntroduction()
-    {
-        Console.WriteLine("ПІБ студента: Радкевич Даша Ігорівна");
-        Console.WriteLine("Курс: 1   Група: ІПЗ-11");
-        Console.WriteLine("Варіант завдання: Серйозна гра для вивчення ООП");
-        Console.WriteLine("Версія 1\n");
-    }
-
-    static User UserLogin()
-    {
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("Для початку зареєструйтесь будь ласка ...");
-
-        Console.ForegroundColor = ConsoleColor.Cyan;
-        Console.WriteLine("Введіть ім'я: ");
-
-        Console.ForegroundColor = ConsoleColor.White;
-        string name = Console.ReadLine() ?? "";
-
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine("Введіть вік: ");
-
-        Console.ForegroundColor = ConsoleColor.White;
-        int age = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
-
-        Console.ForegroundColor = ConsoleColor.Magenta;
-        Console.WriteLine($"\nВітаємо, {name}! Реєстрація успішна.");
-
-        Console.ResetColor();
-
-        var user = new User(name, age);
-
-        return user;
+            Console.WriteLine($"Створено тест з {defaultQuestions.Count} питань (дефолтний).");
+            return new Quiz(defaultQuestions);
+        }
     }
 }
 
-
-
-
-//   var test2 = new List<(string Text, string[] Options, int Correct, string Explanation)>
-//         {
-//             (
-//                 "Що означає ключове слово 'void' у методі?",
-//                 new[] { "Метод нічого не повертає", "Метод повертає ціле число", "Метод є асинхронним", "Метод є конструктором" },
-//                 0,
-//                 "void означає, що метод не повертає жодного значення."
-//             ),
-//             (
-//                 "Як оголосити змінну типу string у C#?",
-//                 new[] { "string x = 5;", "string x = \"Hello\";", "String x = Hello;", "var x = \"Hello\";" },
-//                 1,
-//                 "Правильний синтаксис: string x = \"Hello\";"
-//             ),
-//             (
-//                 "Що робить оператор ++ ?",
-//                 new[] { "Зменшує значення на 1", "Збільшує значення на 1", "Множить на 2", "Ділить на 2" },
-//                 1,
-//                 "++ — це оператор інкременту (збільшення на 1)."
-//             ),
-//             (
-//                 "Який цикл використовується, коли кількість ітерацій відома заздалегідь?",
-//                 new[] { "while", "do-while", "for", "foreach" },
-//                 2,
-//                 "for — найкращий вибір, коли відома кількість повторень."
-//             ),
-//             (
-//                 "Що таке Git?",
-//                 new[] { "Мова програмування", "Система контролю версій", "Фреймворк", "База даних" },
-//                 1,
-//                 "Git — це розподілена система контролю версій."
-//             )
-//             // Додайте ще питання за потребою
-//         };

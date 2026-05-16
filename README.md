@@ -1,2 +1,1 @@
-# Gamification-
 # Gamification
