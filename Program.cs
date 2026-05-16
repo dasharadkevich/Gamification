@@ -15,6 +15,9 @@ namespace ProgrammingGame
 
             AuthorIntroduction();
 
+            Console.WriteLine("Демонстрація роботи унарних операторів"); 
+            DemonstrateOperators(); 
+
             var user = UserLogin();
 
             bool continuePlaying = true;
@@ -148,6 +151,27 @@ namespace ProgrammingGame
             }
         }
 
+        static void DemonstrateOperators()
+        {
+            Console.WriteLine("\n=== ДЕМОНСТРАЦІЯ ПЕРЕВАНТАЖЕНИХ ОПЕРАТОРІВ ===\n");
+
+            var user1 = new User("Даша", 19);
+            var user2 = new User("Юлія", 20);
+
+            user1 += 100;                                     
+
+            Console.WriteLine($"User1: {user1}");
+            Console.WriteLine($"User2: {user2}");
+
+            Console.WriteLine($"user1 > user2 ? {(user1 > user2)}");
+            Console.WriteLine($"user1 == user2 ? {(user1 == user2)}");
+
+            // RankSystem
+            var rank = new RankSystem(150);
+            rank += 200;
+            Console.WriteLine($"Rank після операцій: {rank.Points} очок");
+        }
+
 
         static Quiz CreateDefaultQuiz()
         {
@@ -230,6 +254,12 @@ namespace ProgrammingGame
             Console.WriteLine($"Створено тест з {defaultQuestions.Count} питань (дефолтний).");
             return new Quiz(defaultQuestions);
         }
+
+
+
     }
+
+
+
 }
 

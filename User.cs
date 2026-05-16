@@ -21,7 +21,7 @@ namespace ProgrammingGame
         public bool HasBestStreak(int threshold) => BestStreak >= threshold;
         public bool IsBeginner() => Rank.CurrentRank == "Новачок";
         public bool HasMaxRank() => Rank.CurrentRank == "Архітектор";
-        public bool HasAchievement(string achievementName) => 
+        public bool HasAchievement(string achievementName) =>
             Achievements.Any(a => a.Name.Equals(achievementName, StringComparison.OrdinalIgnoreCase));
         public bool HasAnyAchievements() => Achievements.Count > 0;
         public bool HasAnyAwards() => Awards.Count > 0;
@@ -66,7 +66,34 @@ namespace ProgrammingGame
             stopwatch = new Stopwatch();
         }
 
+        public static User operator +(User user, int points)
+        {
+            user.AddPoints(points);
+            return user;
+        }
 
+        public static User operator +(User a, User b)
+        {
+            var result = new User(a.UserName + " & " + b.UserName, (a.Age + b.Age) / 2);
+            result.Rank = new RankSystem(a.Rank.Points + b.Rank.Points);
+            return result;
+        }
+
+        // Порівняння
+        public static bool operator ==(User a, User b)
+        {
+            if (ReferenceEquals(a, b)) return true;
+            if (a is null || b is null) return false;
+            return a.UserName == b.UserName && a.Rank.Points == b.Rank.Points;
+        }
+
+        public static bool operator !=(User a, User b) => !(a == b);
+
+        public static bool operator >(User a, User b) => a.Rank.Points > b.Rank.Points;
+        public static bool operator <(User a, User b) => a.Rank.Points < b.Rank.Points;
+
+        public override bool Equals(object obj) => obj is User other && this == other;
+        public override int GetHashCode() => UserName.GetHashCode() ^ Rank.Points;
 
 
 
