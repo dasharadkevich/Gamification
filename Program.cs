@@ -13,26 +13,25 @@ namespace ProgrammingGame
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            
-
             AuthorIntroduction();
 
-            Console.WriteLine("Демонстрація роботи унарних операторів"); 
-            DemonstrateOperators(); 
+            Console.WriteLine("Демонстрація роботи унарних операторів");
+            DemonstrateOperators();
 
             var user = UserLogin();
 
             bool continuePlaying = true;
 
+
             while (continuePlaying)
             {
-                Console.WriteLine("\n=== Оберіть режим гри ===");
+                Console.WriteLine("\n=== Оберіть режим ===");
                 Console.WriteLine("1. Пройти Quiz (тест з питань)");
                 Console.WriteLine("2. Пограти в Educational Game");
                 Console.WriteLine("0. Вийти з програми");
 
                 Console.Write("\nВаш вибір: ");
-                string choice = Console.ReadLine()?.Trim();
+                string choice = Console.ReadLine()?.Trim() ?? "";
 
                 switch (choice)
                 {
@@ -50,11 +49,12 @@ namespace ProgrammingGame
 
                     default:
                         Console.WriteLine("Невірний вибір! Спробуйте ще раз.");
-                        break;
+                        continue;
                 }
 
-                if (continuePlaying && choice != "0")
+                if (continuePlaying)
                 {
+                    ShowUserProgress(user);
                     continuePlaying = AskToContinue();
                 }
             }
@@ -62,9 +62,19 @@ namespace ProgrammingGame
             Console.WriteLine("\nДякуємо за гру! До зустрічі 👋");
             Console.ReadKey();
         }
-        private static int currentTestId = 1;
 
-
+        static void ShowUserProgress(User user)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"\n=== ПРОГРЕС ГРАВЦЯ ===");
+            Console.WriteLine($"Ім'я: {user.UserName}");
+            Console.WriteLine($"Вік: {user.Age}");
+            Console.WriteLine($"Ранг: {user.Rank.CurrentRank}");
+            Console.WriteLine($"Очки: {user.Rank.Points}");
+            Console.WriteLine($"Найкраща серія: {user.BestStreak}");
+            Console.WriteLine($"Досягнення: {user.Achievements.Count}");
+            Console.ResetColor();
+        }
         static void PlayQuizMode(User user)
         {
             Console.WriteLine("\n--- Режим Quiz ---");
@@ -89,7 +99,6 @@ namespace ProgrammingGame
             var simulation = new Simulation(user, quiz);
             simulation.Run();
 
-            // Запам'ятовуємо, що тест пройдено
             CompletedTestIds.Add(testId);
         }
 
@@ -101,13 +110,13 @@ namespace ProgrammingGame
             Console.WriteLine("2. Code Puzzle Game");
             Console.Write("\nВаш вибір: ");
 
-            string gameChoice = Console.ReadLine()?.Trim();
+            string gameChoice = Console.ReadLine()?.Trim() ?? "";
 
             IGame selectedGame = gameChoice switch
             {
                 "1" => new OOPTheoryGame(user),
                 "2" => new CodePuzzleGame(user),
-                _   => new OOPTheoryGame(user)
+                _ => new OOPTheoryGame(user)
             };
 
             selectedGame.Run();
@@ -115,7 +124,6 @@ namespace ProgrammingGame
 
         static int GetNextUnplayedTestId()
         {
-            // Можна розширити список доступних тестів
             int[] availableTests = { 1, 2, 3, 4, 5 };
 
             foreach (int id in availableTests)
@@ -124,16 +132,9 @@ namespace ProgrammingGame
                     return id;
             }
 
-            return -1; // всі пройдено
+            return -1;
         }
 
-
-
-
-        static int GetNextTestId()
-        {
-            return currentTestId++;
-        }
 
         static bool AskToContinue()
         {
@@ -240,7 +241,7 @@ namespace ProgrammingGame
             var user1 = new User("Даша", 19);
             var user2 = new User("Юлія", 20);
 
-            user1 += 100;                                     
+            user1 += 100;
 
             Console.WriteLine($"User1: {user1}");
             Console.WriteLine($"User2: {user2}");
@@ -336,12 +337,6 @@ namespace ProgrammingGame
             Console.WriteLine($"Створено тест з {defaultQuestions.Count} питань (дефолтний).");
             return new Quiz(defaultQuestions);
         }
-
-
-
     }
-
-
-
 }
 

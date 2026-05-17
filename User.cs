@@ -6,7 +6,21 @@ namespace ProgrammingGame
     public class User
     {
         public string UserName { get; set; }
-        public int Age { get; set; }
+
+        private int age;
+        public int Age
+        {
+            get => age;
+            set
+            {
+                if (value < 6)
+                    age = 6;
+                else if (value > 99)
+                    age = 99;
+                else
+                    age = value;
+            }
+        }
         public int CurrentStreak { get; private set; } = 0;
         public int BestStreak { get; private set; } = 0;
         public TimeSpan TimeSpent { get; private set; } = TimeSpan.Zero;
