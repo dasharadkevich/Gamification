@@ -8,10 +8,12 @@ namespace ProgrammingGame
 {
     class Program
     {
+        private static readonly HashSet<int> CompletedTestIds = new HashSet<int>();
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+            
 
             AuthorIntroduction();
 
@@ -24,28 +26,109 @@ namespace ProgrammingGame
 
             while (continuePlaying)
             {
-                Quiz quiz = LoadQuizFromJson("tests.json", targetTestId: GetNextTestId());
+                Console.WriteLine("\n=== Оберіть режим гри ===");
+                Console.WriteLine("1. Пройти Quiz (тест з питань)");
+                Console.WriteLine("2. Пограти в Educational Game");
+                Console.WriteLine("0. Вийти з програми");
 
-                if (quiz == null || quiz.IsEmpty())
+                Console.Write("\nВаш вибір: ");
+                string choice = Console.ReadLine()?.Trim();
+
+                switch (choice)
                 {
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Не вдалося завантажити тест з JSON. Використовуємо вбудовані питання.\n");
-                    Console.ResetColor();
+                    case "1":
+                        PlayQuizMode(user);
+                        break;
 
-                    quiz = CreateDefaultQuiz();
+                    case "2":
+                        PlayGameMode(user);
+                        break;
+
+                    case "0":
+                        continuePlaying = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("Невірний вибір! Спробуйте ще раз.");
+                        break;
                 }
 
-                var simulation = new Simulation(user, quiz);
-                simulation.Run();
-
-                continuePlaying = AskToContinue();
+                if (continuePlaying && choice != "0")
+                {
+                    continuePlaying = AskToContinue();
+                }
             }
 
             Console.WriteLine("\nДякуємо за гру! До зустрічі 👋");
             Console.ReadKey();
         }
-
         private static int currentTestId = 1;
+
+
+        static void PlayQuizMode(User user)
+        {
+            Console.WriteLine("\n--- Режим Quiz ---");
+
+            int testId = GetNextUnplayedTestId();
+            if (testId == -1)
+            {
+                Console.WriteLine("Ви вже пройшли всі доступні тести!");
+                return;
+            }
+
+            Quiz quiz = LoadQuizFromJson("tests.json", testId);
+
+            if (quiz == null || quiz.IsEmpty())
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Не вдалося завантажити тест з JSON. Використовуємо вбудовані питання.\n");
+                Console.ResetColor();
+                quiz = CreateDefaultQuiz();
+            }
+
+            var simulation = new Simulation(user, quiz);
+            simulation.Run();
+
+            // Запам'ятовуємо, що тест пройдено
+            CompletedTestIds.Add(testId);
+        }
+
+
+        static void PlayGameMode(User user)
+        {
+            Console.WriteLine("\n--- Режим Educational Game ---");
+            Console.WriteLine("1. OOP Theory Game (Сценарії)");
+            Console.WriteLine("2. Code Puzzle Game");
+            Console.Write("\nВаш вибір: ");
+
+            string gameChoice = Console.ReadLine()?.Trim();
+
+            IGame selectedGame = gameChoice switch
+            {
+                "1" => new OOPTheoryGame(user),
+                "2" => new CodePuzzleGame(user),
+                _   => new OOPTheoryGame(user)
+            };
+
+            selectedGame.Run();
+        }
+
+        static int GetNextUnplayedTestId()
+        {
+            // Можна розширити список доступних тестів
+            int[] availableTests = { 1, 2, 3, 4, 5 };
+
+            foreach (int id in availableTests)
+            {
+                if (!CompletedTestIds.Contains(id))
+                    return id;
+            }
+
+            return -1; // всі пройдено
+        }
+
+
+
 
         static int GetNextTestId()
         {
@@ -135,7 +218,6 @@ namespace ProgrammingGame
                 }
 
 
-                // Конвертуємо питання у формат для Quiz
                 var questionList = selectedTest.Questions
                     .Select(q => (q.Text, q.Options.ToArray(), q.CorrectIndex, q.Explanation))
                     .ToList();
