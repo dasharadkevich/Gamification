@@ -149,6 +149,9 @@ namespace ProgrammingGame
                 Console.ResetColor();
             }
         }
+
+
+
         public override string ToString()
         {
             return $"{UserName}, Вік {Age} | Ранг: {Rank.CurrentRank}";
