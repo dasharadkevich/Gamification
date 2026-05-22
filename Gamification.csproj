@@ -1,5 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+
+<ItemGroup>
+    <None Update="games.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 <ItemGroup>
     <None Update="tests.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

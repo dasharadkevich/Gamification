@@ -6,7 +6,6 @@ namespace ProgrammingGame
     public class User
     {
         public string UserName { get; set; }
-
         private int age;
         public int Age
         {
@@ -21,6 +20,8 @@ namespace ProgrammingGame
                     age = value;
             }
         }
+
+
         public int CurrentStreak { get; private set; } = 0;
         public int BestStreak { get; private set; } = 0;
         public TimeSpan TimeSpent { get; private set; } = TimeSpan.Zero;
@@ -29,17 +30,6 @@ namespace ProgrammingGame
         public RankSystem Rank { get; private set; }
         private Stopwatch stopwatch = new Stopwatch();
 
-
-
-        public bool HasActiveStreak() => CurrentStreak > 0;
-        public bool HasBestStreak(int threshold) => BestStreak >= threshold;
-        public bool IsBeginner() => Rank.CurrentRank == "Новачок";
-        public bool HasMaxRank() => Rank.CurrentRank == "Архітектор";
-        public bool HasAchievement(string achievementName) =>
-            Achievements.Any(a => a.Name.Equals(achievementName, StringComparison.OrdinalIgnoreCase));
-        public bool HasAnyAchievements() => Achievements.Count > 0;
-        public bool HasAnyAwards() => Awards.Count > 0;
-        public bool IsSessionActive() => stopwatch.IsRunning;
 
 
         public User()
@@ -60,24 +50,6 @@ namespace ProgrammingGame
             UserName = userName;
             Age = age;
             Rank = new RankSystem();
-        }
-
-        public User(User other)
-        {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
-
-            UserName = other.UserName;
-            Age = other.Age;
-            CurrentStreak = other.CurrentStreak;
-            BestStreak = other.BestStreak;
-            TimeSpent = other.TimeSpent;
-
-            Achievements = other.Achievements.Select(a => new Achievement(a)).ToList();
-            Awards = other.Awards.Select(a => new Reward(a)).ToList();
-
-            Rank = new RankSystem(other.Rank);
-            stopwatch = new Stopwatch();
         }
 
         public static User operator +(User user, int points)

@@ -8,25 +8,10 @@ namespace ProgrammingGame
         public User User { get; private set; }
         public Quiz Quiz { get; private set; }
 
-
-
-    public bool HasUser() => User != null;
-    public bool HasQuiz() => Quiz != null && Quiz.HasQuestions();
-    public bool IsQuizCompleted(int correctAnswers) => correctAnswers >= Quiz.Questions.Count * 0.7;
-    public bool UserDeservesMasterTitle() => User.BestStreak >= 8 && User.TimeSpent.TotalMinutes <= 12;
-
         public Simulation(User user, Quiz quiz)
         {
             User = user ?? new User();
             Quiz = quiz ?? new Quiz();
-        }
-
-        // Конструктор копій
-        public Simulation(Simulation other)
-        {
-            if (other == null) throw new ArgumentNullException(nameof(other));
-            User = new User(other.User);     
-            Quiz = new Quiz(other.Quiz);      
         }
 
         public void Run()
@@ -101,13 +86,12 @@ namespace ProgrammingGame
             if (User.BestStreak >= 2)
                 User.UnlockAchievement(new Achievement("Незламний", "Досягти серії 5 правильних відповідей"));
 
-            if (User.BestStreak >= 6)
+            if (User.BestStreak >= 4)
                 User.UnlockAchievement(new Achievement("Серійний вбивця питань", "Досягти серії 8+"));
 
-            if (User.BestStreak >= 8)
-                User.UnlockAchievement(new Achievement("ООП Легенда", "Досягти серії 12 правильних відповідей"));
+            if (User.BestStreak >= 5)
+                User.UnlockAchievement(new Achievement("ООП Легенда", "Досягти серії 5 правильних відповідей"));
 
-            // Комбіновані досягнення (Streak + Час)
             if (User.BestStreak >= 6 && User.TimeSpent.TotalMinutes >= 5)
                 User.UnlockAchievement(new Achievement("Швидкий та точний", "Серія 6+ за більше 5 хвилин"));
 

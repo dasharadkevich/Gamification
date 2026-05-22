@@ -9,19 +9,16 @@ namespace ProgrammingGame
     class Program
     {
         private static readonly HashSet<int> CompletedTestIds = new HashSet<int>();
+
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
             AuthorIntroduction();
 
-            Console.WriteLine("Демонстрація роботи унарних операторів");
-            DemonstrateOperators();
-
             var user = UserLogin();
 
             bool continuePlaying = true;
-
 
             while (continuePlaying)
             {
@@ -91,9 +88,8 @@ namespace ProgrammingGame
             if (quiz == null || quiz.IsEmpty())
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Не вдалося завантажити тест з JSON. Використовуємо вбудовані питання.\n");
+                Console.WriteLine("Не вдалося завантажити тест з JSON\n");
                 Console.ResetColor();
-                quiz = CreateDefaultQuiz();
             }
 
             var simulation = new Simulation(user, quiz);
@@ -112,11 +108,12 @@ namespace ProgrammingGame
 
             string gameChoice = Console.ReadLine()?.Trim() ?? "";
 
+
             IGame selectedGame = gameChoice switch
             {
-                "1" => new OOPTheoryGame(user),
-                "2" => new CodePuzzleGame(user),
-                _ => new OOPTheoryGame(user)
+                "1" => new PuzzleGame(user, 1, "OOP Theory Game"),
+                "2" => new PuzzleGame(user, 0, "Code Puzzle Game"),
+                _ => new PuzzleGame(user, 0, "Code Puzzle Game")
             };
 
             selectedGame.Run();
@@ -232,110 +229,6 @@ namespace ProgrammingGame
                 Console.ResetColor();
                 return null;
             }
-        }
-
-        static void DemonstrateOperators()
-        {
-            Console.WriteLine("\n=== ДЕМОНСТРАЦІЯ ПЕРЕВАНТАЖЕНИХ ОПЕРАТОРІВ ===\n");
-
-            var user1 = new User("Даша", 19);
-            var user2 = new User("Юлія", 20);
-
-            user1 += 100;
-
-            Console.WriteLine($"User1: {user1}");
-            Console.WriteLine($"User2: {user2}");
-
-            Console.WriteLine($"user1 > user2 ? {(user1 > user2)}");
-            Console.WriteLine($"user1 == user2 ? {(user1 == user2)}");
-
-            // RankSystem
-            var rank = new RankSystem(150);
-            rank += 200;
-            Console.WriteLine($"Rank після операцій: {rank.Points} очок");
-        }
-
-
-        static Quiz CreateDefaultQuiz()
-        {
-            var defaultQuestions = new List<(string Text, string[] Options, int CorrectIndex, string Explanation)>
-    {
-        (
-            "Що таке інкапсуляція в ООП?",
-            new[]
-            {
-                "Приховування деталей реалізації та захист даних",
-                "Можливість об'єкта набувати різних форм",
-                "Створення ієрархії класів",
-                "Виділення тільки суттєвих характеристик"
-            },
-            0,
-            "Інкапсуляція — це приховування внутрішньої реалізації класу та захист даних."
-        ),
-        (
-            "Що таке поліморфізм?",
-            new[]
-            {
-                "Приховування даних від зовнішнього доступу",
-                "Можливість одного об'єкта мати кілька форм",
-                "Успадкування властивостей від батьківського класу",
-                "Створення нового класу на основі існуючого"
-            },
-            1,
-            "Поліморфізм дозволяє об'єктам різних класів використовувати один інтерфейс."
-        ),
-        (
-            "Який принцип ООП відповідає за створення ієрархії класів?",
-            new[]
-            {
-                "Інкапсуляція",
-                "Абстракція",
-                "Спадкування",
-                "Поліморфізм"
-            },
-            2,
-            "Спадкування (Inheritance) дозволяє дочірньому класу успадковувати властивості та методи батьківського."
-        ),
-        (
-            "Що таке абстракція в ООП?",
-            new[]
-            {
-                "Приховування деталей реалізації",
-                "Виділення тільки суттєвих характеристик об'єкта",
-                "Можливість методу мати кілька реалізацій",
-                "Створення копії об'єкта"
-            },
-            1,
-            "Абстракція — це приховування складності та показ лише необхідної інформації."
-        ),
-        (
-            "Який модифікатор доступу використовується за замовчуванням для членів класу в C#?",
-            new[]
-            {
-                "public",
-                "private",
-                "protected",
-                "internal"
-            },
-            1,
-            "У C# члени класу (поля, методи) за замовчуванням мають доступ private."
-        ),
-        (
-            "Для чого використовується ключове слово 'virtual'?",
-            new[]
-            {
-                "Для створення абстрактного методу",
-                "Для дозволу перевизначення методу в похідному класі",
-                "Для статичного зв'язування",
-                "Для приховування методу"
-            },
-            1,
-            "virtual дозволяє перевизначати метод у дочірніх класах за допомогою override."
-        )
-    };
-
-            Console.WriteLine($"Створено тест з {defaultQuestions.Count} питань (дефолтний).");
-            return new Quiz(defaultQuestions);
         }
     }
 }

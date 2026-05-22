@@ -6,11 +6,6 @@ namespace ProgrammingGame
         public int Points { get; private set; } = 0;
 
 
-        public bool IsMaxRank() => CurrentRank == "Архітектор";
-        public bool IsNewbie() => CurrentRank == "Новачок";
-        public bool HasEnoughPoints(int required) => Points >= required;
-
-
         public RankSystem(RankSystem other)
         {
             if (other == null)

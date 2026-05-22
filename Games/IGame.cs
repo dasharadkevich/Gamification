@@ -2,7 +2,6 @@ namespace ProgrammingGame
 {
     public interface IGame
     {
-        string GameName { get; }
         string Description { get; }
         
         void Start(User user);
