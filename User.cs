@@ -23,11 +23,11 @@ namespace ProgrammingGame
 
 
         public int CurrentStreak { get; private set; } = 0;
-        public int BestStreak { get; private set; } = 0;
+        public int BestStreak { get; set; } = 0;
         public TimeSpan TimeSpent { get; private set; } = TimeSpan.Zero;
         public List<Achievement> Achievements { get; private set; } = new List<Achievement>();
         public List<Reward> Awards { get; private set; } = new List<Reward>();
-        public RankSystem Rank { get; private set; }
+        public RankSystem Rank { get; set; }
         private Stopwatch stopwatch = new Stopwatch();
 
 

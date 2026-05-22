@@ -52,6 +52,7 @@ namespace ProgrammingGame
                 if (continuePlaying)
                 {
                     ShowUserProgress(user);
+                    ShowLeaderboard(user); 
                     continuePlaying = AskToContinue();
                 }
             }
@@ -229,6 +230,48 @@ namespace ProgrammingGame
                 Console.ResetColor();
                 return null;
             }
+        }
+
+
+        static void ShowLeaderboard(User currentUser)
+        {
+            // Pre-created users (fake data)
+            var leaderboard = new List<User>
+    {
+        new User("Alex", 20) { Rank = new RankSystem { Points = 10, CurrentRank = "Advanced" }, BestStreak = 1 },
+        new User("Maria", 22) { Rank = new RankSystem { Points = 50, CurrentRank = "Expert" }, BestStreak = 2 },
+        new User("Ivan", 19) { Rank = new RankSystem { Points = 120, CurrentRank = "Beginner" }, BestStreak = 4 },
+        new User("Olena", 21) { Rank = new RankSystem { Points = 300, CurrentRank = "Advanced" }, BestStreak = 6 },
+    };
+
+            // Add current user
+            leaderboard.Add(currentUser);
+
+            // Sort by points descending
+            var sorted = leaderboard
+                .OrderByDescending(u => u.Rank.Points)
+                .ToList();
+
+            Console.WriteLine("\n\n🏆 ===== LEADERBOARD ===== 🏆");
+
+            for (int i = 0; i < sorted.Count; i++)
+            {
+                var u = sorted[i];
+
+                bool isCurrent = u == currentUser;
+
+                if (isCurrent)
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                else
+                    Console.ForegroundColor = ConsoleColor.White;
+
+                Console.WriteLine(
+                    $"{i + 1}. {u.UserName} | {u.Rank.Points} pts | {u.Rank.CurrentRank} | Streak: {u.BestStreak}"
+                );
+            }
+
+            Console.ResetColor();
+            Console.WriteLine("============================\n");
         }
     }
 }

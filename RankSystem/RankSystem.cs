@@ -2,8 +2,8 @@ namespace ProgrammingGame
 {
     public class RankSystem
     {
-        public string CurrentRank { get; private set; } = "Новачок";
-        public int Points { get; private set; } = 0;
+        public string CurrentRank { get; set; } = "Новачок";
+        public int Points { get; set; } = 0;
 
 
         public RankSystem(RankSystem other)
