@@ -10,12 +10,5 @@ namespace ProgrammingGame
             Name = string.IsNullOrWhiteSpace(name) ? "Невідома нагорода" : name;
             Type = string.IsNullOrWhiteSpace(type) ? "Award" : type;
         }
-
-        public Reward(Reward other)
-        {
-            if (other == null) throw new ArgumentNullException(nameof(other));
-            Name = other.Name;
-            Type = other.Type;
-        }
     }
 }
