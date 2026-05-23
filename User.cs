@@ -29,9 +29,7 @@ namespace ProgrammingGame
         public List<Reward> Awards { get; private set; } = new List<Reward>();
         public RankSystem Rank { get; set; }
         private Stopwatch stopwatch = new Stopwatch();
-
-
-
+        
         public User()
         {
             UserName = "Гравець";

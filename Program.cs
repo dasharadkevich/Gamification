@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace ProgrammingGame
 {
     class Program
     {
         private static readonly HashSet<int> CompletedTestIds = new HashSet<int>();
+        private static readonly string UserFile = "current_user.json";
 
         static void Main(string[] args)
         {
@@ -52,10 +54,13 @@ namespace ProgrammingGame
                 if (continuePlaying)
                 {
                     ShowUserProgress(user);
-                    ShowLeaderboard(user); 
+                    ShowLeaderboard(user);
                     continuePlaying = AskToContinue();
                 }
             }
+
+            user.EndSession();
+            SaveUserToFile(user);
 
             Console.WriteLine("\nДякуємо за гру! До зустрічі 👋");
             Console.ReadKey();
@@ -118,6 +123,9 @@ namespace ProgrammingGame
             };
 
             selectedGame.Run();
+
+            user.EndSession();
+            SaveUserToFile(user);
         }
 
         static int GetNextUnplayedTestId()
@@ -157,27 +165,33 @@ namespace ProgrammingGame
         static User UserLogin()
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Для початку зареєструйтесь будь ласка ...");
+            Console.WriteLine("Для початку увійдіть або зареєструйтесь ...");
 
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("Введіть ім'я: ");
-
-            Console.ForegroundColor = ConsoleColor.White;
-            string name = Console.ReadLine() ?? "";
+            Console.Write("Введіть ім'я: ");
+            string name = Console.ReadLine()?.Trim() ?? "Гравець";
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Введіть вік: ");
+            Console.Write("Введіть вік: ");
+            int age = int.TryParse(Console.ReadLine(), out int result) ? result : 18;
 
-            Console.ForegroundColor = ConsoleColor.White;
-            int age = int.TryParse(Console.ReadLine(), out int result) ? result : 0;
+            User user = LoadUserFromFile(name);
+
+            if (user == null)
+            {
+                user = new User(name, age);
+                Console.WriteLine("Новий профіль створено.");
+            }
+            else
+            {
+                Console.WriteLine("Профіль завантажено з файлу.");
+            }
 
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine($"\nВітаємо, {name}! Реєстрація успішна.");
-
+            Console.WriteLine($"\nВітаємо, {user.UserName}! Вхід успішний.");
             Console.ResetColor();
 
-            var user = new User(name, age);
-
+            user.StartSession();
             return user;
         }
 
@@ -272,6 +286,38 @@ namespace ProgrammingGame
 
             Console.ResetColor();
             Console.WriteLine("============================\n");
+        }
+
+        static User LoadUserFromFile(string name)
+        {
+            if (!File.Exists(UserFile)) return null;
+
+            try
+            {
+                string json = File.ReadAllText(UserFile);
+                var loaded = JsonSerializer.Deserialize<User>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                if (loaded != null && loaded.UserName.Equals(name, StringComparison.OrdinalIgnoreCase))
+                    return loaded;
+            }
+            catch { }
+            return null;
+        }
+
+        static void SaveUserToFile(User user)
+        {
+            try
+            {
+                string json = JsonSerializer.Serialize(user, new JsonSerializerOptions
+                {
+                    WriteIndented = true,
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles
+                });
+                File.WriteAllText(UserFile, json);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Помилка збереження: {ex.Message}");
+            }
         }
     }
 }
