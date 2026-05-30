@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using ProgrammingGame.Data.JSONModels;
+
 namespace ProgrammingGame
 {
     class Program
@@ -15,7 +17,7 @@ namespace ProgrammingGame
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-            ProgramHelpers.AuthorIntroduction();
+            TextManager.DisplayAuthorIntroduction(); 
 
             var user = ProgramHelpers.UserLogin();
 
@@ -42,7 +44,7 @@ namespace ProgrammingGame
                         break;
 
                     default:
-                        Console.WriteLine("Невірний вибір! Спробуйте ще раз.");
+                        Console.WriteLine(TextManager.Texts?.ErrorMessages?.InvalidChoice ?? "Невірний вибір! Спробуйте ще раз.");
                         continue;
                 }
 
@@ -50,39 +52,36 @@ namespace ProgrammingGame
                 {
                     ProgramHelpers.ShowUserProgress(user);
                     ProgramHelpers.ShowLeaderboard(user);
-                    continuePlaying = AskToContinue();
+                    continuePlaying = ProgramHelpers.AskToContinue();
                 }
             }
 
             user.EndSession();
             ProgramHelpers.SaveUserToFile(user);
 
-            Console.WriteLine("\nДякуємо за гру! До зустрічі 👋");
+            Console.WriteLine(TextManager.Texts?.UserInterface?.ThankYou ?? "\nДякуємо за гру! До зустрічі 👋");
             Console.ReadKey();
         }
 
-
-
-
-
         static void PlayQuizMode(User user)
         {
-            Console.WriteLine("\n--- Режим Quiz ---");
+            Console.WriteLine(TextManager.Texts?.GameDescriptions?.QuizMode ?? "\n--- Режим Quiz ---");
 
             int testId = GetNextUnplayedTestId();
             if (testId == -1)
             {
-                Console.WriteLine("Ви вже пройшли всі доступні тести!");
+                Console.WriteLine(TextManager.Texts?.QuizMessages?.AllTestsCompleted ?? "Ви вже пройшли всі доступні тести!");
                 return;
             }
 
-            Quiz quiz = ProgramHelpers.LoadQuizFromJson("tests.json", testId);
+            Quiz quiz = ProgramHelpers.LoadQuizFromJson("Data/JSON/tests.json", testId);
 
             if (quiz == null || quiz.IsEmpty())
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Не вдалося завантажити тест з JSON\n");
+                Console.WriteLine(TextManager.Texts?.QuizMessages?.LoadFailed ?? "Не вдалося завантажити тест з JSON\n");
                 Console.ResetColor();
+                return;
             }
 
             var simulation = new Simulation(user, quiz);
@@ -91,22 +90,23 @@ namespace ProgrammingGame
             CompletedTestIds.Add(testId);
         }
 
-
         static void PlayGameMode(User user)
         {
-            Console.WriteLine("\n--- Режим Educational Game ---");
-            Console.WriteLine("1. OOP Theory Game (Сценарії)");
-            Console.WriteLine("2. Code Puzzle Game");
-            Console.Write("\nВаш вибір: ");
+            var gameNames = TextManager.Texts?.GameNames;
+            var educationalOptions = TextManager.Texts?.EducationalGameOptions;
+            
+            Console.WriteLine(TextManager.Texts?.GameDescriptions?.GameMode ?? "\n--- Режим Educational Game ---");
+            Console.WriteLine(educationalOptions?.Title ?? "1. OOP Theory Game (Сценарії)");
+            Console.WriteLine(educationalOptions?.Title2 ?? "2. Code Puzzle Game");
+            Console.Write($"\n{educationalOptions?.Prompt ?? "Ваш вибір: "}");
 
             string gameChoice = Console.ReadLine()?.Trim() ?? "";
 
-
             IGame selectedGame = gameChoice switch
             {
-                "1" => new PuzzleGame(user, 1, "OOP Theory Game"),
-                "2" => new PuzzleGame(user, 0, "Code Puzzle Game"),
-                _ => new PuzzleGame(user, 0, "Code Puzzle Game")
+                "1" => new PuzzleGame(user, 1, gameNames?.OopTheory ?? "OOP Theory Game"),
+                "2" => new PuzzleGame(user, 0, gameNames?.CodePuzzle ?? "Code Puzzle Game"),
+                _ => new PuzzleGame(user, 0, gameNames?.CodePuzzle ?? "Code Puzzle Game")
             };
 
             selectedGame.Run();
@@ -126,18 +126,6 @@ namespace ProgrammingGame
             }
 
             return -1;
-        }
-
-
-        static bool AskToContinue()
-        {
-            Console.WriteLine("\n" + new string('═', 50));
-            Console.WriteLine("Бажаєте пройти ще один тест?");
-            Console.Write("Напишіть 'no' або 'ні', щоб вийти. Для продовження — просто натисніть Enter: ");
-
-            string input = Console.ReadLine()?.Trim().ToLower() ?? "";
-
-            return input != "no" && input != "ні" && input != "n";
         }
     }
 }

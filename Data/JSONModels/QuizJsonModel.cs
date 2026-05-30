@@ -1,4 +1,4 @@
-namespace ProgrammingGame
+namespace ProgrammingGame.Data.JSONModels
 {
     public class QuizFileRoot
     {

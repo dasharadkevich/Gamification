@@ -1,3 +1,5 @@
+using ProgrammingGame.Data.JSONModels;
+
 namespace ProgrammingGame
 {
     public class Reward
@@ -7,8 +9,8 @@ namespace ProgrammingGame
 
         public Reward(string name, string type = "Award")
         {
-            Name = string.IsNullOrWhiteSpace(name) ? "Невідома нагорода" : name;
-            Type = string.IsNullOrWhiteSpace(type) ? "Award" : type;
+            Name = string.IsNullOrWhiteSpace(name) ? "" : name;
+            Type = string.IsNullOrWhiteSpace(type) ? "" : type;
         }
     }
 }

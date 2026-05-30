@@ -1,3 +1,5 @@
+using ProgrammingGame.Data.JSONModels;
+
 namespace ProgrammingGame
 {
     public class RankSystem

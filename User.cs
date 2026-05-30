@@ -1,12 +1,16 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
+
+using ProgrammingGame.Data.JSONModels;
+
 namespace ProgrammingGame
 {
-    using System.Diagnostics;
     public class User
     {
         public string UserName { get; set; }
         private int age;
+        
         public int Age
         {
             get => age;
@@ -31,15 +35,11 @@ namespace ProgrammingGame
 
         public User()
         {
-            UserName = "Гравець";
-            Age = 18;
-
-            stopwatch = new Stopwatch();
-            Achievements = new List<Achievement>();
-            Awards = new List<Reward>();
+            var defaultValues = TextManager.Texts?.DefaultValues;
+            
+            UserName = defaultValues?.DefaultUserName ?? "Гравець";
+            Age = defaultValues?.DefaultAge ?? 18;
             Rank = new RankSystem();
-
-            TimeSpent = TimeSpan.Zero;
         }
 
         public User(string userName, int age)
@@ -49,41 +49,50 @@ namespace ProgrammingGame
             Rank = new RankSystem();
         }
 
-
         public void StartSession() => stopwatch.Restart();
+        
         public void EndSession()
         {
             stopwatch.Stop();
             TimeSpent += stopwatch.Elapsed;
         }
+        
         public void AddPoints(int points)
         {
             Rank.AddPoints(points);
         }
+        
         public void IncreaseStreak()
         {
             CurrentStreak++;
             if (CurrentStreak > BestStreak)
                 BestStreak = CurrentStreak;
         }
+        
         public void ResetStreak() => CurrentStreak = 0;
+        
         public void UnlockAchievement(Achievement achievement)
         {
             if (!Achievements.Any(a => a.Name == achievement.Name))
             {
                 Achievements.Add(achievement);
+                var achievementMessages = TextManager.Texts?.AchievementMessages;
+                
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine($"🏆 Нове досягнення: {achievement.Name}!");
+                Console.WriteLine(string.Format(achievementMessages?.Unlock ?? "🏆 Нове досягнення: {0}!", achievement.Name));
                 Console.ResetColor();
             }
         }
+        
         public void UnlockAward(Reward award)
         {
             if (!Awards.Any(a => a.Name == award.Name))
             {
                 Awards.Add(award);
+                var achievementMessages = TextManager.Texts?.AchievementMessages;
+                
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"🎖 Нагорода: {award.Name}!");
+                Console.WriteLine(string.Format(achievementMessages?.Award ?? "🎖 Нагорода: {0}!", award.Name));
                 Console.ResetColor();
             }
         }

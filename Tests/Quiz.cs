@@ -2,6 +2,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.VisualBasic;
 using System.Text.Json;
 
+using ProgrammingGame.Data.JSONModels;
 
 namespace ProgrammingGame
 {
@@ -11,7 +12,7 @@ namespace ProgrammingGame
 
         public bool IsEmpty() => Questions.Count == 0;
 
-        public string _fileName = "games.json"; 
+        public string _fileName = "Data/JSON/games.json"; 
        
         public Quiz(List<(string Text, string[] Options, int CorrectIndex, string Explanation)> questions)
         {

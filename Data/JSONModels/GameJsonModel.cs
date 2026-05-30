@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO; 
 using System.Text.Json;
 
-namespace ProgrammingGame
+namespace ProgrammingGame.Data.JSONModels
 {
     public class QuestionItem
     {

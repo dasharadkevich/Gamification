@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text.Json;
 
+using ProgrammingGame.Data.JSONModels;
 
 namespace ProgrammingGame
 {
@@ -11,12 +12,14 @@ namespace ProgrammingGame
     {
         private bool IsValidateFile(string fileName)
         {
+            var errorMessages = TextManager.Texts?.ErrorMessages;
+            
             if (File.Exists(fileName))
                 return true;
 
-            Console.WriteLine($"\n[Помилка] Файл {fileName} не знайдено!");
-            Console.WriteLine($"Шлях: {Path.GetFullPath(fileName)}");
-            Console.WriteLine("Перемістіть файл або налаштуйте Copy to Output Directory.");
+            Console.WriteLine(string.Format(errorMessages?.FileNotFound ?? "", fileName));
+            Console.WriteLine(string.Format(errorMessages?.FilePath ?? "", Path.GetFullPath(fileName)));
+            Console.WriteLine(errorMessages?.MoveFile ?? "");
 
             return false;
         }
@@ -55,17 +58,19 @@ namespace ProgrammingGame
 
         private bool AskQuestion(QuestionItem q)
         {
+            var puzzleMessages = TextManager.Texts?.PuzzleMessages;
+            
             Console.WriteLine($"\n> {q.Text}");
 
             DisplayOptions(q);
 
-            Console.Write("Ваша відповідь: ");
+            Console.Write(puzzleMessages?.Prompt ?? "");
 
             string input = Console.ReadLine()?.Trim().ToUpper() ?? "";
 
             if (string.IsNullOrWhiteSpace(input))
             {
-                Console.WriteLine("Завдання пропущено.");
+                Console.WriteLine(puzzleMessages?.Skipped ?? "");
                 return false;
             }
 
@@ -88,22 +93,22 @@ namespace ProgrammingGame
 
         private void ShowResult(bool isCorrect, QuestionItem q)
         {
+            var puzzleMessages = TextManager.Texts?.PuzzleMessages;
+            
             if (isCorrect)
             {
-                Console.WriteLine("✅ Правильно!");
+                Console.WriteLine(puzzleMessages?.Correct ?? "");
             }
             else
             {
                 char correctLetter = (char)('A' + q.CorrectIndex);
-
-                Console.WriteLine($"❌ Невірно. Правильна відповідь: {correctLetter}");
+                Console.WriteLine(string.Format(puzzleMessages?.Incorrect ?? "", correctLetter));
             }
 
             if (!string.IsNullOrWhiteSpace(q.Explanation))
             {
-                Console.WriteLine($"💡 Пояснення: {q.Explanation}");
+                Console.WriteLine(string.Format(puzzleMessages?.Explanation ?? "", q.Explanation));
             }
         }
     }
-
-} 
+}

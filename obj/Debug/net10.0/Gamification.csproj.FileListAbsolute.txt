@@ -13,5 +13,7 @@
 /Users/dasharadkevych/Gamification/obj/Debug/net10.0/Gamification.genruntimeconfig.cache
 /Users/dasharadkevych/Gamification/obj/Debug/net10.0/ref/Gamification.dll
 /Users/dasharadkevych/Gamification/obj/Debug/net10.0/Gamification.sourcelink.json
-/Users/dasharadkevych/Gamification/bin/Debug/net10.0/tests.json
-/Users/dasharadkevych/Gamification/bin/Debug/net10.0/games.json
+/Users/dasharadkevych/Gamification/bin/Debug/net10.0/Data/Config/text.json
+/Users/dasharadkevych/Gamification/bin/Debug/net10.0/Data/JSON/games.json
+/Users/dasharadkevych/Gamification/bin/Debug/net10.0/Data/JSON/tests.json
+/Users/dasharadkevych/Gamification/bin/Debug/net10.0/Data/Profiles/current_user.json

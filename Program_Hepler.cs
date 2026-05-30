@@ -5,47 +5,44 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using ProgrammingGame.Data.JSONModels;
+
 namespace ProgrammingGame
 {
     internal static class ProgramHelpers
     {
-        private static readonly string UserFile = "current_user.json";
-
-        public static void AuthorIntroduction()
-        {
-            Console.WriteLine("ПІБ студента: Радкевич Даша Ігорівна");
-            Console.WriteLine("Курс: 1   Група: ІПЗ-11");
-            Console.WriteLine("Варіант завдання: Серйозна гра для вивчення ООП");
-            Console.WriteLine("Версія 1\n");
-        }
+        private static readonly string UserFile = "Data/Profiles/current_user.json";
 
         public static User UserLogin()
         {
+            var userInterface = TextManager.Texts?.UserInterface;
+            var defaultValues = TextManager.Texts?.DefaultValues;
+            
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Для початку увійдіть або зареєструйтесь ...");
+            Console.WriteLine(userInterface?.LoginTitle ?? "");
 
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write("Введіть ім'я: ");
-            string name = Console.ReadLine()?.Trim() ?? "Гравець";
+            Console.Write(userInterface?.EnterName ?? "Введіть ім'я: ");
+            string name = Console.ReadLine()?.Trim() ?? defaultValues?.DefaultUserName ?? "";
 
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("Введіть вік: ");
-            int age = int.TryParse(Console.ReadLine(), out int result) ? result : 18;
+            Console.Write(userInterface?.EnterAge ?? "");
+            int age = int.TryParse(Console.ReadLine(), out int result) ? result : (defaultValues?.DefaultAge ?? 18);
 
             User user = LoadUserFromFile(name);
 
             if (user == null)
             {
                 user = new User(name, age);
-                Console.WriteLine("Новий профіль створено.");
+                Console.WriteLine(userInterface?.NewProfileCreated ?? "");
             }
             else
             {
-                Console.WriteLine("Профіль завантажено з файлу.");
+                Console.WriteLine(userInterface?.ProfileLoaded ?? "");
             }
 
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine($"\nВітаємо, {user.UserName}! Вхід успішний.");
+            Console.WriteLine(TextManager.FormatWelcome(user.UserName));
             Console.ResetColor();
 
             user.StartSession();
@@ -54,22 +51,28 @@ namespace ProgrammingGame
 
         public static void ShowUserProgress(User user)
         {
+            var progressMessages = TextManager.Texts?.ProgressMessages;
+            
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine($"\n=== ПРОГРЕС ГРАВЦЯ ===");
-            Console.WriteLine($"Ім'я: {user.UserName}");
-            Console.WriteLine($"Вік: {user.Age}");
-            Console.WriteLine($"Ранг: {user.Rank.CurrentRank}");
-            Console.WriteLine($"Очки: {user.Rank.Points}");
-            Console.WriteLine($"Найкраща серія: {user.BestStreak}");
-            Console.WriteLine($"Досягнення: {user.Achievements.Count}");
+            Console.WriteLine("==========" + progressMessages?.Title ?? "" + "==========");
+            Console.WriteLine(TextManager.FormatProgressName(user.UserName));
+            Console.WriteLine(TextManager.FormatProgressAge(user.Age));
+            Console.WriteLine(TextManager.FormatProgressRank(user.Rank.CurrentRank));
+            Console.WriteLine(TextManager.FormatProgressPoints(user.Rank.Points));
+            Console.WriteLine(TextManager.FormatProgressStreak(user.BestStreak));
+            Console.WriteLine(TextManager.FormatProgressAchievements(user.Achievements.Count));
+            
+
             Console.ResetColor();
         }
 
         public static bool AskToContinue()
         {
+            var continuePrompt = TextManager.Texts?.ContinuePrompt;
+            
             Console.WriteLine("\n" + new string('═', 50));
-            Console.WriteLine("Бажаєте пройти ще один тест?");
-            Console.Write("Напишіть 'no' або 'ні', щоб вийти. Для продовження — просто натисніть Enter: ");
+            Console.WriteLine(continuePrompt?.Message ?? "");
+            Console.Write(continuePrompt?.Instruction ?? "");
 
             string input = Console.ReadLine()?.Trim().ToLower() ?? "";
             return input != "no" && input != "ні" && input != "n";
@@ -77,12 +80,14 @@ namespace ProgrammingGame
 
         public static Quiz LoadQuizFromJson(string filePath, int targetTestId)
         {
+            var errorMessages = TextManager.Texts?.ErrorMessages;
+            
             try
             {
                 string fullPath = Path.GetFullPath(filePath);
                 if (!File.Exists(fullPath))
                 {
-                    Console.WriteLine($"Файл не знайдено: {fullPath}");
+                    Console.WriteLine(TextManager.FormatFileNotFound(filePath));
                     return null;
                 }
 
@@ -92,16 +97,11 @@ namespace ProgrammingGame
 
                 if (root?.Tests == null || root.Tests.Count == 0)
                 {
-                    Console.WriteLine("У JSON-файлі немає тестів.");
+                    Console.WriteLine(errorMessages?.JsonEmpty ?? "");
                     return null;
                 }
 
                 var selectedTest = root.Tests.FirstOrDefault(t => t.TestId == targetTestId);
-                if (selectedTest == null)
-                {
-                    Console.WriteLine($"Тест з ID {targetTestId} не знайдено.");
-                    return null;
-                }
 
                 var questionList = selectedTest.Questions
                     .Select(q => (q.Text, q.Options.ToArray(), q.CorrectIndex, q.Explanation))
@@ -112,7 +112,7 @@ namespace ProgrammingGame
             catch (Exception ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Помилка читання JSON: {ex.Message}");
+                Console.WriteLine(TextManager.FormatJsonParseError(ex.Message));
                 Console.ResetColor();
                 return null;
             }
@@ -120,6 +120,8 @@ namespace ProgrammingGame
 
         public static void ShowLeaderboard(User currentUser)
         {
+            var leaderboardMessages = TextManager.Texts?.LeaderboardMessages;
+            
             var leaderboard = new List<User>
             {
                 new User("Alex", 20) { Rank = new RankSystem { Points = 10, CurrentRank = "Advanced" }, BestStreak = 1 },
@@ -132,7 +134,7 @@ namespace ProgrammingGame
 
             var sorted = leaderboard.OrderByDescending(u => u.Rank.Points).ToList();
 
-            Console.WriteLine("\n\n🏆 ===== LEADERBOARD ===== 🏆");
+            Console.WriteLine(leaderboardMessages?.Title ?? "\n\n🏆 ===== LEADERBOARD ===== 🏆");
             for (int i = 0; i < sorted.Count; i++)
             {
                 var u = sorted[i];
@@ -141,10 +143,11 @@ namespace ProgrammingGame
                 else
                     Console.ForegroundColor = ConsoleColor.White;
 
-                Console.WriteLine($"{i + 1}. {u.UserName} | {u.Rank.Points} pts | {u.Rank.CurrentRank} | Streak: {u.BestStreak}");
+                Console.WriteLine(string.Format(leaderboardMessages?.Entry ?? "", 
+                    i + 1, u.UserName, u.Rank.Points, u.Rank.CurrentRank, u.BestStreak));
             }
             Console.ResetColor();
-            Console.WriteLine("============================\n");
+            Console.WriteLine(leaderboardMessages?.Footer ?? "============================\n");
         }
 
         public static User LoadUserFromFile(string name)
@@ -153,7 +156,9 @@ namespace ProgrammingGame
             try
             {
                 string json = File.ReadAllText(UserFile);
-                var loaded = JsonSerializer.Deserialize<User>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                var loaded = JsonSerializer.Deserialize<User>(json, options);
+                
                 if (loaded != null && loaded.UserName.Equals(name, StringComparison.OrdinalIgnoreCase))
                     return loaded;
             }
@@ -163,6 +168,8 @@ namespace ProgrammingGame
 
         public static void SaveUserToFile(User user)
         {
+            var errorMessages = TextManager.Texts?.ErrorMessages;
+            
             try
             {
                 string json = JsonSerializer.Serialize(user, new JsonSerializerOptions
@@ -174,18 +181,20 @@ namespace ProgrammingGame
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Помилка збереження: {ex.Message}");
+                Console.WriteLine(string.Format(errorMessages?.SaveError ?? "", ex.Message));
             }
         }
 
         public static void ChooseGameMenu()
         {
-            Console.WriteLine("\n=== Оберіть режим ===");
-            Console.WriteLine("1. Пройти Quiz (тест з питань)");
-            Console.WriteLine("2. Пограти в Educational Game");
-            Console.WriteLine("0. Вийти з програми");
+            var menuOptions = TextManager.Texts?.MenuOptions;
+            
+            Console.WriteLine($"\n{menuOptions?.ChooseGame ?? ""}");
+            Console.WriteLine(menuOptions?.Option1 ?? "");
+            Console.WriteLine(menuOptions?.Option2 ?? "");
+            Console.WriteLine(menuOptions?.Option0 ?? "");
 
-            Console.Write("\nВаш вибір: ");
+            Console.Write($"\n{menuOptions?.YourChoice ?? ""}");
         }
     }
 }

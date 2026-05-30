@@ -1,10 +1,11 @@
 using System.Text.Json.Serialization;
 
-namespace ProgrammingGame
+namespace ProgrammingGame.Data.JSONModels
 {
     public class TextResources
     {
         public AuthorInfo? AuthorInfo { get; set; }
+        public AuthorMessages? AuthorMessages { get; set; }
         public GameDescriptions? GameDescriptions { get; set; }
         public MenuOptions? MenuOptions { get; set; }
         public EducationalGameOptions? EducationalGameOptions { get; set; }
@@ -36,6 +37,14 @@ namespace ProgrammingGame
         public string PuzzleGame { get; set; } = string.Empty;
         public string QuizMode { get; set; } = string.Empty;
         public string GameMode { get; set; } = string.Empty;
+    }
+
+    public class AuthorMessages
+    {
+        public string StudentNameLabel { get; set; } = string.Empty;
+        public string CourseGroupLabel { get; set; } = string.Empty;
+        public string VariantLabel { get; set; } = string.Empty;
+        public string VersionLabel { get; set; } = string.Empty;
     }
 
     public class MenuOptions
@@ -177,4 +186,3 @@ namespace ProgrammingGame
         public string Quiz { get; set; } = string.Empty;
     }
 }
-    

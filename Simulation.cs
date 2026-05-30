@@ -1,5 +1,8 @@
 using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
+
+using ProgrammingGame.Data.JSONModels;
 
 namespace ProgrammingGame
 {
@@ -17,35 +20,38 @@ namespace ProgrammingGame
         public void Run()
         {
             User.StartSession();
-
             Menu(User);
-
+            
             int correctCount = 0;
-
-            RunTest(correctCount);
-
+            RunTest(ref correctCount);
+            
             User.EndSession();
-
-            Console.WriteLine("=== ФІНІШ ІМІТАЦІЇ ===");
-            Console.WriteLine($"Правильних відповідей: {correctCount}/{Quiz.Questions.Count}");
+            
+            var simulationMessages = TextManager.Texts?.SimulationMessages;
+            var achievementMessages = TextManager.Texts?.AchievementMessages;
+            
+            Console.WriteLine(simulationMessages?.Finish ?? "=== ФІНІШ ІМІТАЦІЇ ===");
+            Console.WriteLine(string.Format(simulationMessages?.CorrectCount ?? "Правильних відповідей: {0}/{1}", correctCount, Quiz.Questions.Count));
             Console.WriteLine($"Найкраща серія: {User.BestStreak}");
-            Console.WriteLine($"Загальний час у грі: {User.TimeSpent:mm\\:ss}");
-            Console.WriteLine($"Найкраща серія: {User.BestStreak}");
-
+            Console.WriteLine(string.Format(simulationMessages?.TotalTime ?? "Загальний час у грі: {0:mm\\:ss}", User.TimeSpent));
+            
             AwardAchievements();
         }
 
-        public void RunTest(int correctCount)
+        public void RunTest(ref int correctCount)
         {
+            var quizMessages = TextManager.Texts?.QuizMessages;
+            
             foreach (var question in Quiz.Questions)
             {
-                Console.WriteLine($"\nПитання: {question.Text}");
+                Console.WriteLine(string.Format(quizMessages?.QuestionPrefix ?? "\nПитання: {0}", question.Text));
+                
                 for (int i = 0; i < question.Options.Count; i++)
                 {
                     Console.WriteLine($"{i + 1}. {question.Options[i]}");
                 }
 
-                Console.Write("\nВаша відповідь (номер): ");
+                Console.Write(quizMessages?.AnswerPrompt ?? "\nВаша відповідь (номер): ");
                 int.TryParse(Console.ReadLine(), out int answer);
                 answer--;
 
@@ -54,34 +60,37 @@ namespace ProgrammingGame
                 if (isCorrect)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine("✓ Правильно!");
+                    Console.WriteLine(quizMessages?.Correct ?? "✓ Правильно!");
                     correctCount++;
                     User.AddPoints(20);
                     User.IncreaseStreak();
 
                     if (User.CurrentStreak >= 3)
-                        Console.WriteLine($"🔥 Серія: {User.CurrentStreak}!");
+                        Console.WriteLine(string.Format(quizMessages?.StreakMessage ?? "🔥 Серія: {0}!", User.CurrentStreak));
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("✗ Неправильно.");
+                    Console.WriteLine(quizMessages?.Incorrect ?? "✗ Неправильно.");
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"Правильна відповідь: {question.CorrectAnswerIndex + 1}. {question.Options[question.CorrectAnswerIndex]}");
+                    Console.WriteLine(string.Format(quizMessages?.CorrectAnswer ?? "Правильна відповідь: {0}. {1}", 
+                        question.CorrectAnswerIndex + 1, question.Options[question.CorrectAnswerIndex]));
                     User.ResetStreak();
                 }
 
                 Console.ResetColor();
-                Console.WriteLine($"Пояснення: {question.Explanation}");
-                Console.WriteLine($"Бали: {(isCorrect ? "+20" : "+0")} | Найкраща серія: {User.BestStreak} | Стрік: {User.CurrentStreak}\n");
+                Console.WriteLine(string.Format(quizMessages?.Explanation ?? "Пояснення: {0}", question.Explanation));
+                Console.WriteLine(string.Format(quizMessages?.ScoreInfo ?? "Бали: {0} | Найкраща серія: {1} | Стрік: {2}\n", 
+                    isCorrect ? "+20" : "+0", User.BestStreak, User.CurrentStreak));
 
                 Thread.Sleep(1600);
             }
-
         }
+        
         private void AwardAchievements()
         {
-            Console.WriteLine("\n--- Отримані нагороди та досягнення ---");
+            var achievementMessages = TextManager.Texts?.AchievementMessages;
+            Console.WriteLine($"\n{achievementMessages?.Title ?? "--- Отримані нагороди та досягнення ---"}");
 
             if (User.BestStreak >= 2)
                 User.UnlockAchievement(new Achievement("Незламний", "Досягти серії 5 правильних відповідей"));
@@ -114,19 +123,20 @@ namespace ProgrammingGame
             if (User.BestStreak >= 8 && User.TimeSpent.TotalMinutes <= 10)
                 User.UnlockAward(new Reward("Ідеальний раунд", "Special"));
 
-
             if (User.Achievements.Count == 0 && User.Awards.Count == 0)
             {
-                Console.WriteLine("На жаль, цього разу немає нових нагород. Спробуйте покращити серію!");
+                Console.WriteLine(achievementMessages?.NoRewards ?? "На жаль, цього разу немає нових нагород. Спробуйте покращити серію!");
             }
         }
 
         static void Menu(User User)
         {
-            Console.WriteLine("=== СТАРТ ІМІТАЦІЇ ООП ТЕСТУ ===\n");
-            Console.WriteLine($"Користувач: {User}");
-            Console.WriteLine($"Дисципліна: Основи Об'єктно-Орієнтованого Програмування");
-            Console.WriteLine($"Платформа: EduQuest OOP Simulator\n");
+            var simulationMessages = TextManager.Texts?.SimulationMessages;
+            
+            Console.WriteLine(simulationMessages?.Start ?? "=== СТАРТ ІМІТАЦІЇ ООП ТЕСТУ ===\n");
+            Console.WriteLine(string.Format(simulationMessages?.User ?? "Користувач: {0}", User.UserName));
+            Console.WriteLine(simulationMessages?.Discipline ?? "Дисципліна: Основи Об'єктно-Орієнтованого Програмування");
+            Console.WriteLine(simulationMessages?.Platform ?? "Платформа: EduQuest OOP Simulator\n");
         }
     }
 }

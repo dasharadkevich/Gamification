@@ -1,13 +1,13 @@
 {
   "UserName": "Dasha",
-  "Age": 18,
+  "Age": 12,
   "CurrentStreak": 0,
-  "BestStreak": 4,
-  "TimeSpent": "00:00:06.6878665",
+  "BestStreak": 0,
+  "TimeSpent": "00:00:00.0025380",
   "Achievements": [],
   "Awards": [],
   "Rank": {
-    "CurrentRank": "Junior",
-    "Points": 100
+    "CurrentRank": "\u041D\u043E\u0432\u0430\u0447\u043E\u043A",
+    "Points": 0
   }
 }
