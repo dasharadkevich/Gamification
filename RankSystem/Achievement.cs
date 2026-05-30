@@ -19,12 +19,5 @@ namespace ProgrammingGame
                 ? (defaultValues?.DefaultAchievementDescription ?? "") 
                 : description;
         }
-        
-        private Achievement()
-        {
-            var defaultValues = TextManager.Texts?.DefaultValues;
-            Name = defaultValues?.DefaultAchievementName ?? "";
-            Description = defaultValues?.DefaultAchievementDescription ?? "";
-        }
     }
 }

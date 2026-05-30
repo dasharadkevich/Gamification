@@ -5,6 +5,8 @@ namespace ProgrammingGame.Data.JSONModels
     public class TextResources
     {
         public AuthorInfo? AuthorInfo { get; set; }
+        public List<AchievementData>? Achievements { get; set; }
+        public List<RewardData>? Rewards { get; set; }
         public AuthorMessages? AuthorMessages { get; set; }
         public GameDescriptions? GameDescriptions { get; set; }
         public MenuOptions? MenuOptions { get; set; }
@@ -23,6 +25,25 @@ namespace ProgrammingGame.Data.JSONModels
         public GameNames? GameNames { get; set; }
     }
 
+    public class AchievementData
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public int StreakRequired { get; set; }
+        public int TimeRequiredMinutes { get; set; }
+        public bool MaxTimeRequired { get; set; }
+    }
+
+    public class RewardData
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Type { get; set; } = string.Empty;
+        public int StreakRequired { get; set; }
+        public int TimeRequiredMinutes { get; set; }
+        public bool MaxTimeRequired { get; set; }
+    }
     public class AuthorInfo
     {
         public string FullName { get; set; } = string.Empty;
@@ -161,7 +182,6 @@ namespace ProgrammingGame.Data.JSONModels
         public string DefaultUserName { get; set; } = string.Empty;
         public int DefaultAge { get; set; }
         public string DefaultRank { get; set; } = string.Empty;
-        public int DefaultRankPoints { get; set; }
         public string DefaultAchievementName { get; set; } = string.Empty;
         public string DefaultAchievementDescription { get; set; } = string.Empty;
         public string DefaultRewardName { get; set; } = string.Empty;
@@ -183,6 +203,5 @@ namespace ProgrammingGame.Data.JSONModels
     {
         public string OopTheory { get; set; } = string.Empty;
         public string CodePuzzle { get; set; } = string.Empty;
-        public string Quiz { get; set; } = string.Empty;
     }
 }

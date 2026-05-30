@@ -44,7 +44,7 @@ namespace ProgrammingGame
                         break;
 
                     default:
-                        Console.WriteLine(TextManager.Texts?.ErrorMessages?.InvalidChoice ?? "Невірний вибір! Спробуйте ще раз.");
+                        Console.WriteLine(TextManager.Texts?.ErrorMessages?.InvalidChoice ?? "");
                         continue;
                 }
 
@@ -59,18 +59,18 @@ namespace ProgrammingGame
             user.EndSession();
             ProgramHelpers.SaveUserToFile(user);
 
-            Console.WriteLine(TextManager.Texts?.UserInterface?.ThankYou ?? "\nДякуємо за гру! До зустрічі 👋");
+            Console.WriteLine(TextManager.Texts?.UserInterface?.ThankYou ?? "");
             Console.ReadKey();
         }
 
         static void PlayQuizMode(User user)
         {
-            Console.WriteLine(TextManager.Texts?.GameDescriptions?.QuizMode ?? "\n--- Режим Quiz ---");
+            Console.WriteLine(TextManager.Texts?.GameDescriptions?.QuizMode ?? "");
 
             int testId = GetNextUnplayedTestId();
             if (testId == -1)
             {
-                Console.WriteLine(TextManager.Texts?.QuizMessages?.AllTestsCompleted ?? "Ви вже пройшли всі доступні тести!");
+                Console.WriteLine(TextManager.Texts?.QuizMessages?.AllTestsCompleted ?? "");
                 return;
             }
 
@@ -79,7 +79,7 @@ namespace ProgrammingGame
             if (quiz == null || quiz.IsEmpty())
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(TextManager.Texts?.QuizMessages?.LoadFailed ?? "Не вдалося завантажити тест з JSON\n");
+                Console.WriteLine(TextManager.Texts?.QuizMessages?.LoadFailed ?? "");
                 Console.ResetColor();
                 return;
             }
@@ -95,18 +95,18 @@ namespace ProgrammingGame
             var gameNames = TextManager.Texts?.GameNames;
             var educationalOptions = TextManager.Texts?.EducationalGameOptions;
             
-            Console.WriteLine(TextManager.Texts?.GameDescriptions?.GameMode ?? "\n--- Режим Educational Game ---");
-            Console.WriteLine(educationalOptions?.Title ?? "1. OOP Theory Game (Сценарії)");
-            Console.WriteLine(educationalOptions?.Title2 ?? "2. Code Puzzle Game");
-            Console.Write($"\n{educationalOptions?.Prompt ?? "Ваш вибір: "}");
+            Console.WriteLine(TextManager.Texts?.GameDescriptions?.GameMode ?? "");
+            Console.WriteLine(educationalOptions?.Title ?? "");
+            Console.WriteLine(educationalOptions?.Title2 ?? "");
+            Console.Write($"\n{educationalOptions?.Prompt ?? ""}");
 
             string gameChoice = Console.ReadLine()?.Trim() ?? "";
 
             IGame selectedGame = gameChoice switch
             {
-                "1" => new PuzzleGame(user, 1, gameNames?.OopTheory ?? "OOP Theory Game"),
-                "2" => new PuzzleGame(user, 0, gameNames?.CodePuzzle ?? "Code Puzzle Game"),
-                _ => new PuzzleGame(user, 0, gameNames?.CodePuzzle ?? "Code Puzzle Game")
+                "1" => new PuzzleGame(user, 1, gameNames?.OopTheory ?? ""),
+                "2" => new PuzzleGame(user, 0, gameNames?.CodePuzzle ?? ""),
+                _ => new PuzzleGame(user, 0, gameNames?.CodePuzzle ?? "")
             };
 
             selectedGame.Run();

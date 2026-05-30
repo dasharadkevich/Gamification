@@ -27,15 +27,5 @@ namespace ProgrammingGame
             if (CorrectAnswerIndex < 0 || CorrectAnswerIndex >= Options.Count)
                 CorrectAnswerIndex = 0;
         }
-
-        public Question(Question other)
-        {
-            if (other == null) throw new ArgumentNullException(nameof(other));
-
-            Text = other.Text;
-            Options = new List<string>(other.Options);
-            CorrectAnswerIndex = other.CorrectAnswerIndex;
-            Explanation = other.Explanation;
-        }
     }
 }

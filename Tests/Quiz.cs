@@ -11,8 +11,6 @@ namespace ProgrammingGame
         public List<Question> Questions { get; private set; } = new List<Question>();
 
         public bool IsEmpty() => Questions.Count == 0;
-
-        public string _fileName = "Data/JSON/games.json"; 
        
         public Quiz(List<(string Text, string[] Options, int CorrectIndex, string Explanation)> questions)
         {

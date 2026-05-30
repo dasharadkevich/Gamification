@@ -32,7 +32,7 @@ namespace ProgrammingGame
         public void Start(User user)
         {
             var puzzleMessages = TextManager.Texts?.PuzzleMessages;
-            Console.WriteLine(string.Format(puzzleMessages?.Start ?? "\n=== {0} ===", GameName));
+            Console.WriteLine(string.Format(puzzleMessages?.Start ?? "", GameName));
             Console.WriteLine(Description);
         }
 

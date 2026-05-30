@@ -27,14 +27,6 @@ namespace ProgrammingGame.Data.JSONModels
                 Console.WriteLine(string.Format(authorMessages.VariantLabel, author.Variant));
                 Console.WriteLine(string.Format(authorMessages.VersionLabel, author.Version));
             }
-            else
-            {
-                // Fallback hardcoded values (should not happen if JSON loads correctly)
-                Console.WriteLine("ПІБ студента: Радкевич Даша Ігорівна");
-                Console.WriteLine("Курс: 1   Група: ІПЗ-11");
-                Console.WriteLine("Варіант завдання: Серйозна гра для вивчення ООП");
-                Console.WriteLine("Версія 1\n");
-            }
         }
         private static void LoadResources()
         {
@@ -71,47 +63,47 @@ namespace ProgrammingGame.Data.JSONModels
 
         public static string FormatWelcome(string userName)
         {
-            return string.Format(Texts?.UserInterface?.Welcome ?? "Вітаємо, {0}! Вхід успішний.", userName);
+            return string.Format(Texts?.UserInterface?.Welcome ?? "", userName);
         }
 
         public static string FormatProgressName(string name)
         {
-            return string.Format(Texts?.ProgressMessages?.Name ?? "Ім'я: {0}", name);
+            return string.Format(Texts?.ProgressMessages?.Name ?? "", name);
         }
 
         public static string FormatProgressAge(int age)
         {
-            return string.Format(Texts?.ProgressMessages?.Age ?? "Вік: {0}", age);
+            return string.Format(Texts?.ProgressMessages?.Age ?? "", age);
         }
 
         public static string FormatProgressRank(string rank)
         {
-            return string.Format(Texts?.ProgressMessages?.Rank ?? "Ранг: {0}", rank);
+            return string.Format(Texts?.ProgressMessages?.Rank ?? "", rank);
         }
 
         public static string FormatProgressPoints(int points)
         {
-            return string.Format(Texts?.ProgressMessages?.Points ?? "Очки: {0}", points);
+            return string.Format(Texts?.ProgressMessages?.Points ?? "", points);
         }
 
         public static string FormatProgressStreak(int streak)
         {
-            return string.Format(Texts?.ProgressMessages?.BestStreak ?? "Найкраща серія: {0}", streak);
+            return string.Format(Texts?.ProgressMessages?.BestStreak ?? "", streak);
         }
 
         public static string FormatProgressAchievements(int count)
         {
-            return string.Format(Texts?.ProgressMessages?.Achievements ?? "Досягнення: {0}", count);
+            return string.Format(Texts?.ProgressMessages?.Achievements ?? "", count);
         }
 
         public static string FormatFileNotFound(string fileName)
         {
-            return string.Format(Texts?.ErrorMessages?.FileNotFound ?? "\n[Помилка] Файл {0} не знайдено!", fileName);
+            return string.Format(Texts?.ErrorMessages?.FileNotFound ?? "", fileName);
         }
 
         public static string FormatJsonParseError(string error)
         {
-            return string.Format(Texts?.ErrorMessages?.JsonParseError ?? "[Помилка] Не вдалося зчитати JSON. Невірний формат синтаксису: {0}", error);
+            return string.Format(Texts?.ErrorMessages?.JsonParseError ?? "", error);
         }
 
     }

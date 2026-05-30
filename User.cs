@@ -37,7 +37,7 @@ namespace ProgrammingGame
         {
             var defaultValues = TextManager.Texts?.DefaultValues;
             
-            UserName = defaultValues?.DefaultUserName ?? "Гравець";
+            UserName = defaultValues?.DefaultUserName ?? "";
             Age = defaultValues?.DefaultAge ?? 18;
             Rank = new RankSystem();
         }
@@ -79,7 +79,7 @@ namespace ProgrammingGame
                 var achievementMessages = TextManager.Texts?.AchievementMessages;
                 
                 Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.WriteLine(string.Format(achievementMessages?.Unlock ?? "🏆 Нове досягнення: {0}!", achievement.Name));
+                Console.WriteLine(string.Format(achievementMessages?.Unlock ?? "", achievement.Name));
                 Console.ResetColor();
             }
         }
@@ -92,7 +92,7 @@ namespace ProgrammingGame
                 var achievementMessages = TextManager.Texts?.AchievementMessages;
                 
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(string.Format(achievementMessages?.Award ?? "🎖 Нагорода: {0}!", award.Name));
+                Console.WriteLine(string.Format(achievementMessages?.Award ?? "", award.Name));
                 Console.ResetColor();
             }
         }
