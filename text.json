@@ -1,0 +1,149 @@
+{
+  "authorInfo": {
+    "fullName": "Радкевич Даша Ігорівна",
+    "course": 1,
+    "group": "ІПЗ-11",
+    "variant": "Серйозна гра для вивчення ООП",
+    "version": "1"
+  },
+  
+  "gameDescriptions": {
+    "puzzleGame": "Склади правильний код з запропонованих варіантів",
+    "quizMode": "--- Режим Quiz ---",
+    "gameMode": "--- Режим Educational Game ---"
+  },
+  
+  "menuOptions": {
+    "chooseGame": "=== Оберіть режим ===",
+    "option1": "1. Пройти Quiz (тест з питань)",
+    "option2": "2. Пограти в Educational Game",
+    "option0": "0. Вийти з програми",
+    "yourChoice": "Ваш вибір: "
+  },
+  
+  "educationalGameOptions": {
+    "title": "1. OOP Theory Game (Сценарії)",
+    "title2": "2. Code Puzzle Game",
+    "prompt": "Ваш вибір: "
+  },
+  
+  "userInterface": {
+    "loginTitle": "Для початку увійдіть або зареєструйтесь ...",
+    "enterName": "Введіть ім'я: ",
+    "enterAge": "Введіть вік: ",
+    "newProfileCreated": "Новий профіль створено.",
+    "profileLoaded": "Профіль завантажено з файлу.",
+    "welcome": "Вітаємо, {0}! Вхід успішний.",
+    "thankYou": "\nДякуємо за гру! До зустрічі 👋"
+  },
+  
+  "progressMessages": {
+    "title": "=== ПРОГРЕС ГРАВЦЯ ===",
+    "name": "Ім'я: {0}",
+    "age": "Вік: {0}",
+    "rank": "Ранг: {0}",
+    "points": "Очки: {0}",
+    "bestStreak": "Найкраща серія: {0}",
+    "achievements": "Досягнення: {0}"
+  },
+  
+  "continuePrompt": {
+    "message": "Бажаєте пройти ще один тест?",
+    "instruction": "Напишіть 'no' або 'ні', щоб вийти. Для продовження — просто натисніть Enter: "
+  },
+  
+  "quizMessages": {
+    "allTestsCompleted": "Ви вже пройшли всі доступні тести!",
+    "loadFailed": "Не вдалося завантажити тест з JSON\n",
+    "questionPrefix": "\nПитання: {0}",
+    "answerPrompt": "\nВаша відповідь (номер): ",
+    "correct": "✓ Правильно!",
+    "incorrect": "✗ Неправильно.",
+    "correctAnswer": "Правильна відповідь: {0}. {1}",
+    "explanation": "Пояснення: {0}",
+    "scoreInfo": "Бали: {0} | Найкраща серія: {1} | Стрік: {2}\n",
+    "streakMessage": "🔥 Серія: {0}!"
+  },
+  
+  "puzzleMessages": {
+    "start": "\n=== {0} ===",
+    "topic": "\nТема: {0}",
+    "prompt": "Ваша відповідь: ",
+    "skipped": "Завдання пропущено.",
+    "correct": "✅ Правильно!",
+    "incorrect": "❌ Невірно. Правильна відповідь: {0}",
+    "explanation": "💡 Пояснення: {0}",
+    "completed": "\n=== {0} завершено ===",
+    "result": "Результат: {0} балів"
+  },
+  
+  "errorMessages": {
+    "fileNotFound": "\n[Помилка] Файл {0} не знайдено!",
+    "filePath": "Шлях: {0}",
+    "moveFile": "Перемістіть файл або налаштуйте Copy to Output Directory.",
+    "jsonEmpty": "[Помилка] JSON порожній або має невірну структуру.",
+    "jsonParseError": "[Помилка] Не вдалося зчитати JSON. Невірний формат синтаксису: {0}",
+    "criticalError": "[Критична помилка]: {0}",
+    "invalidChoice": "Невірний вибір! Спробуйте ще раз.",
+    "saveError": "Помилка збереження: {0}"
+  },
+  
+  "simulationMessages": {
+    "start": "=== СТАРТ ІМІТАЦІЇ ООП ТЕСТУ ===\n",
+    "user": "Користувач: {0}",
+    "discipline": "Дисципліна: Основи Об'єктно-Орієнтованого Програмування",
+    "platform": "Платформа: EduQuest OOP Simulator\n",
+    "finish": "=== ФІНІШ ІМІТАЦІЇ ===",
+    "correctCount": "Правильних відповідей: {0}/{1}",
+    "totalTime": "Загальний час у грі: {0:mm\\:ss}"
+  },
+  
+  "achievementMessages": {
+    "title": "--- Отримані нагороди та досягнення ---",
+    "unlock": "🏆 Нове досягнення: {0}!",
+    "award": "🎖 Нагорода: {0}!",
+    "noRewards": "На жаль, цього разу немає нових нагород. Спробуйте покращити серію!"
+  },
+  
+  "leaderboardMessages": {
+    "title": "\n\n🏆 ===== LEADERBOARD ===== 🏆",
+    "entry": "{0}. {1} | {2} pts | {3} | Streak: {4}",
+    "footer": "============================\n"
+  },
+  
+  "defaultValues": {
+    "defaultUserName": "Гравець",
+    "defaultAge": 18,
+    "defaultRank": "Новачок",
+    "defaultRankPoints": 0,
+    "defaultAchievementName": "Без назви",
+    "defaultAchievementDescription": "Немає опису",
+    "defaultRewardName": "Невідома нагорода",
+    "defaultRewardType": "Award",
+    "defaultQuestionText": "Питання не вказано",
+    "defaultExplanation": "Пояснення відсутнє"
+  },
+  
+  "rankNames": {
+    "novice": "Новачок",
+    "junior": "Junior",
+    "middle": "Middle",
+    "senior": "Senior",
+    "architect": "Архітектор"
+  },
+  
+  "gameNames": {
+    "oopTheory": "OOP Theory Game",
+    "codePuzzle": "Code Puzzle Game",
+    "quiz": "Quiz"
+  },
+  
+  "leaderboardExamples": {
+    "users": [
+      { "name": "Alex", "rank": "Advanced" },
+      { "name": "Maria", "rank": "Expert" },
+      { "name": "Ivan", "rank": "Beginner" },
+      { "name": "Olena", "rank": "Advanced" }
+    ]
+  }
+}

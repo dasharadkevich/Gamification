@@ -21,7 +21,6 @@ namespace ProgrammingGame
             }
         }
 
-
         public int CurrentStreak { get; private set; } = 0;
         public int BestStreak { get; set; } = 0;
         public TimeSpan TimeSpent { get; private set; } = TimeSpan.Zero;
@@ -29,7 +28,7 @@ namespace ProgrammingGame
         public List<Reward> Awards { get; private set; } = new List<Reward>();
         public RankSystem Rank { get; set; }
         private Stopwatch stopwatch = new Stopwatch();
-        
+
         public User()
         {
             UserName = "Гравець";
@@ -49,37 +48,6 @@ namespace ProgrammingGame
             Age = age;
             Rank = new RankSystem();
         }
-
-        public static User operator +(User user, int points)
-        {
-            user.AddPoints(points);
-            return user;
-        }
-
-        public static User operator +(User a, User b)
-        {
-            var result = new User(a.UserName + " & " + b.UserName, (a.Age + b.Age) / 2);
-            result.Rank = new RankSystem(a.Rank.Points + b.Rank.Points);
-            return result;
-        }
-
-        // Порівняння
-        public static bool operator ==(User a, User b)
-        {
-            if (ReferenceEquals(a, b)) return true;
-            if (a is null || b is null) return false;
-            return a.UserName == b.UserName && a.Rank.Points == b.Rank.Points;
-        }
-
-        public static bool operator !=(User a, User b) => !(a == b);
-
-        public static bool operator >(User a, User b) => a.Rank.Points > b.Rank.Points;
-        public static bool operator <(User a, User b) => a.Rank.Points < b.Rank.Points;
-
-        public override bool Equals(object obj) => obj is User other && this == other;
-        public override int GetHashCode() => UserName.GetHashCode() ^ Rank.Points;
-
-
 
 
         public void StartSession() => stopwatch.Restart();
@@ -118,13 +86,6 @@ namespace ProgrammingGame
                 Console.WriteLine($"🎖 Нагорода: {award.Name}!");
                 Console.ResetColor();
             }
-        }
-
-
-
-        public override string ToString()
-        {
-            return $"{UserName}, Вік {Age} | Ранг: {Rank.CurrentRank}";
         }
     }
 }

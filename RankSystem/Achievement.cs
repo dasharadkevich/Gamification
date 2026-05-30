@@ -11,15 +11,7 @@ namespace ProgrammingGame
             Name = name;
             Description = description;
         }
-
-        public Achievement(Achievement other)
-        {
-            if (other == null) throw new ArgumentNullException(nameof(other));
-
-            Name = other.Name;
-            Description = other.Description;
-        }
-
+        
         private Achievement()
         {
             Name = "Без назви";

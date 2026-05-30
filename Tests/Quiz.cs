@@ -23,12 +23,6 @@ namespace ProgrammingGame
             Questions = new List<Question>();
         }
 
-        public Quiz(Quiz other)
-        {
-            if (other == null) throw new ArgumentNullException(nameof(other));
-            Questions = other.Questions.Select(q => new Question(q)).ToList();
-        }
-
         private void InitializeQuestions(List<(string Text, string[] Options, int CorrectIndex, string Explanation)> questions)
         {
             foreach (var q in questions)

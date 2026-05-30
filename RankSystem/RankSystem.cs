@@ -5,37 +5,39 @@ namespace ProgrammingGame
         public string CurrentRank { get; set; } = "Новачок";
         public int Points { get; set; } = 0;
 
+        private List<(int points, string rank)> Ranks { get; set; }
+
         public RankSystem()
         {
-            Ranks = new List<(int, string)>
-            {
-                (0,   "Новачок"),
-                (100, "Junior"),
-                (250, "Middle"),
-                (450, "Senior"),
-                (700, "Архітектор")
-            };
-
-            CurrentRank = "Новачок";
             Points = 0;
+            Ranks = new List<(int points, string rank)>();
+            InitializeRanksFromTextResources();
+            UpdateRank();
         }
-
 
         public RankSystem(int initialPoints)
         {
             Points = Math.Max(0, initialPoints);
+            Ranks = new List<(int points, string rank)>();
+            InitializeRanksFromTextResources();
             UpdateRank();
         }
 
 
-        private readonly List<(int points, string rank)> Ranks = new()
-    {
-        (0, "Новачок"),
-        (100, "Junior"),
-        (250, "Middle"),
-        (450, "Senior"),
-        (700, "Архітектор")
-    };
+        private void InitializeRanksFromTextResources()
+        {
+
+            var rankNames = TextManager.Texts?.RankNames;
+
+                Ranks = new List<(int points, string rank)>
+                {
+                    (0, rankNames.Novice),
+                    (100, rankNames.Junior),
+                    (250, rankNames.Middle),
+                    (450, rankNames.Senior),
+                    (700, rankNames.Architect)
+                };
+        }
 
         public void AddPoints(int points)
         {
